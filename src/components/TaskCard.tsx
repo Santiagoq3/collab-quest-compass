@@ -17,9 +17,10 @@ interface TaskCardProps {
   task: Task;
   index: number;
   onClick?: () => void;
+  onOpenDetail?: (task: Task) => void;
 }
 
-export function TaskCard({ task, index, onClick }: TaskCardProps) {
+export function TaskCard({ task, index, onClick, onOpenDetail }: TaskCardProps) {
   const priorityColors = {
     High: "text-danger",
     Medium: "text-warning", 
@@ -43,7 +44,7 @@ export function TaskCard({ task, index, onClick }: TaskCardProps) {
             "p-4 cursor-pointer hover:shadow-medium transition-smooth bg-card/50 backdrop-blur-sm",
             snapshot.isDragging && "rotate-2 shadow-large"
           )}
-          onClick={onClick}
+          onClick={() => onOpenDetail ? onOpenDetail(task) : onClick?.()}
         >
           <div className="space-y-3">
             {/* Header */}

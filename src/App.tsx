@@ -7,6 +7,7 @@ import { Layout } from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import KanbanBoard from "./pages/KanbanBoard";
+import AddTask from "./pages/AddTask";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route index element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
             <Route path="kanban" element={<KanbanBoard />} />
+            <Route path="add-task" element={<AddTask />} />
             <Route path="tasks" element={<Dashboard />} />
             <Route path="team" element={<Dashboard />} />
             <Route path="notifications" element={<Dashboard />} />

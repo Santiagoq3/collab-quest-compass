@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TaskCard } from "@/components/TaskCard";
+import { TaskDetailModal } from "@/components/TaskDetailModal";
 import { 
   Plus, 
   Filter, 
@@ -18,8 +20,11 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 export default function KanbanBoard() {
+  const navigate = useNavigate();
   const [columns, setColumns] = useState<KanbanColumn[]>(kanbanColumns);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -61,6 +66,16 @@ export default function KanbanBoard() {
     });
 
     setColumns(newColumns);
+  };
+
+  const handleOpenTaskDetail = (task: Task) => {
+    setSelectedTask(task);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCloseTaskDetail = () => {
+    setSelectedTask(null);
+    setIsDetailModalOpen(false);
   };
 
   const filteredColumns = columns.map(column => ({
@@ -109,7 +124,7 @@ export default function KanbanBoard() {
               <Filter className="h-4 w-4" />
               Filter
             </Button>
-            <Button variant="hero">
+            <Button variant="hero" onClick={() => navigate("/add-task")}>
               <Plus className="h-4 w-4" />
               Add Task
             </Button>
@@ -157,10 +172,7 @@ export default function KanbanBoard() {
                               key={task.id}
                               task={task}
                               index={index}
-                              onClick={() => {
-                                // Handle task click - could open modal
-                                console.log('Open task:', task.id);
-                              }}
+                              onOpenDetail={handleOpenTaskDetail}
                             />
                           ))}
                           {provided.placeholder}
@@ -183,6 +195,12 @@ export default function KanbanBoard() {
           </div>
         </DragDropContext>
       </div>
+
+      <TaskDetailModal
+        task={selectedTask}
+        isOpen={isDetailModalOpen}
+        onClose={handleCloseTaskDetail}
+      />
     </div>
   );
 }
